@@ -809,7 +809,7 @@ class App {
     let response = await this.sendQuery(
       `mutation DeleteProperty($extendableId: ID!, $propertyDefinitionId: ID!) {
         mfg {
-          clearProperty(input: {extendableId: $extendableId, propertyDefinitionId: $propertyDefinitionId}) {
+          clearProperties(input: {extendableId: $extendableId, propertyDefinitionIds: [$propertyDefinitionId]}) {
             extendableId
           }
         }
