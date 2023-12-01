@@ -11,7 +11,7 @@ document.getElementById("definitionDialogOk").onclick = (event) => {
     description: document.getElementById("definitionDescription").value,
     specification: document.getElementById("definitionType").value,
     propertyBehavior: document.getElementById("definitionBehaviour").value,
-    readOnly: document.getElementById("definitionReadonlyYes").checked,
+    isReadOnly: document.getElementById("definitionReadonlyYes").checked,
     isHidden: document.getElementById("definitionHiddenYes").checked,
     shouldCopy: document.getElementById("definitionIncludeYes").checked,
   });
@@ -47,8 +47,8 @@ export async function showDefinitionDialog(callback, values, isEditing) {
     values?.description || "";
   document.getElementById("definitionBehaviour").value =
     values?.propertyBehavior || "DYNAMIC";
-  document.getElementById("definitionReadonlyYes").checked = values?.readOnly;
-  document.getElementById("definitionReadonlyNo").checked = !values?.readOnly;
+  document.getElementById("definitionReadonlyYes").checked = values?.isReadOnly;
+  document.getElementById("definitionReadonlyNo").checked = !values?.isReadOnly;
   document.getElementById("definitionHiddenYes").checked = values?.isHidden;
   document.getElementById("definitionHiddenNo").checked = !values?.isHidden;
   document.getElementById("definitionIncludeYes").checked = values?.shouldCopy;

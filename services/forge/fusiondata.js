@@ -295,7 +295,7 @@ class App {
                     name
                     propertyBehavior
                     isArchived
-                    readOnly
+                    isReadOnly
                     specification
                     units {
                       name
@@ -436,7 +436,7 @@ class App {
                 isArchived
                 isHidden
                 shouldCopy
-                readOnly
+                isReadOnly
                 description
                 propertyBehavior
               }
@@ -457,13 +457,13 @@ class App {
     return res;
   }
 
-  async createDefinition(collectionId, name, specification, description, isHidden, shouldCopy, readOnly, propertyBehavior) { 
+  async createDefinition(collectionId, name, specification, description, isHidden, shouldCopy, isReadOnly, propertyBehavior) { 
 
     let response = await this.sendQuery(
-      `mutation CreatePropertyDefinition($propertyDefinitionCollectionId: ID!, $propertyDefinitionName: String!, $propertySpecification: String!, $description: String!, $isHidden: Boolean!, $shouldCopy: Boolean!, $readOnly: Boolean!, $propertyBehavior: PropertyBehavior!) {
+      `mutation CreatePropertyDefinition($propertyDefinitionCollectionId: ID!, $propertyDefinitionName: String!, $propertySpecification: String!, $description: String!, $isHidden: Boolean!, $shouldCopy: Boolean!, $isReadOnly: Boolean!, $propertyBehavior: PropertyBehavior!) {
         mfg {
           createPropertyDefinition(
-            input: {propertyDefinitionCollectionId: $propertyDefinitionCollectionId, name: $propertyDefinitionName, specification: $propertySpecification, description: $description, isHidden: $isHidden, shouldCopy: $shouldCopy, readOnly: $readOnly, propertyBehavior: $propertyBehavior}
+            input: {propertyDefinitionCollectionId: $propertyDefinitionCollectionId, name: $propertyDefinitionName, specification: $propertySpecification, description: $description, isHidden: $isHidden, shouldCopy: $shouldCopy, isReadOnly: $isReadOnly, propertyBehavior: $propertyBehavior}
           ) {
             propertyDefinition {
               id
@@ -476,7 +476,7 @@ class App {
               isArchived
               isHidden
               shouldCopy
-              readOnly
+              isReadOnly
               description
               propertyBehavior
             }
@@ -489,7 +489,7 @@ class App {
         propertySpecification: specification,
         description: description,
         isHidden: isHidden,
-        readOnly: readOnly,
+        isReadOnly: isReadOnly,
         shouldCopy: shouldCopy,
 
         propertyBehavior: propertyBehavior
@@ -515,7 +515,7 @@ class App {
             isArchived
             isHidden
             shouldCopy
-            readOnly
+            isReadOnly
             description
             propertyBehavior
           }
@@ -548,7 +548,7 @@ class App {
               isArchived
               isHidden
               shouldCopy
-              readOnly
+              isReadOnly
               description
               propertyBehavior
             }
@@ -584,7 +584,7 @@ class App {
               isArchived
               isHidden
               shouldCopy
-              readOnly
+              isReadOnly
               description
               propertyBehavior
             }

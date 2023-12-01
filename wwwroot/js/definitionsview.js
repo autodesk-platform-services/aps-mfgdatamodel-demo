@@ -42,7 +42,7 @@ function callShowDefinitionDialog(inputValues, isEditing, isCollectionEmpty) {
               definitionDescription: values.description,
               isHidden: values.isHidden,
               shouldCopy: values.shouldCopy,
-              readOnly: values.readOnly,
+              isReadOnly: values.isReadOnly,
               propertyBehavior: values.propertyBehavior,
             })
           );
@@ -121,7 +121,7 @@ function addRow(definitionsTable, definition) {
     <td class="definition-behavior">${formatString(toNonEmpty(definition.propertyBehavior))}</td>
     <td class="definition-description">${definition.description}</td>
     <td class="definition-hidden">${toYesOrNo(definition.isHidden)}</td>
-    <td class="definition-readonly">${toYesOrNo(definition.readOnly)}</td>
+    <td class="definition-readonly">${toYesOrNo(definition.isReadOnly)}</td>
     <td>
       <span href="" class="bi bi-pencil clickable" title="Edit property definition">&nbsp;</span>
       ${showArchive ? '<span href="" class="bi bi-archive clickable" title="Archive property">&nbsp;</span>' : ''}
