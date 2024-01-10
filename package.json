@@ -1,5 +1,5 @@
 {
-  "name": "mfg-model-data-demo",
+  "name": "aps-mfgdatamodel-demo",
   "version": "1.0.0",
   "description": "APS sample app showing the capabilities of MFG Data Model API.",
   "scripts": {
@@ -7,7 +7,7 @@
   },
   "keywords": [
     "autodesk",
-    "forge"
+    "aps"
   ],
   "author": "Adam Nagy <adam.nagy@autodesk.com>",
   "license": "MIT",

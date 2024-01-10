@@ -69,7 +69,8 @@ function getInputElements(tbody) {
 }
 
 function isComponentLevelProperty(propertyBehavior) {
-  return (['STANDARD', 'TIMELESS'].includes(propertyBehavior));
+  // 2023-12-06: STANDARD now needs to be set on tip version
+  return (['TIMELESS'].includes(propertyBehavior));
 }
 
 function getInputValues(input) {
@@ -310,13 +311,14 @@ function addPropertiesToTable(table, collection, versionProperties, collectionNa
             propertyDefinitionId: definitionId,
             value
           })
-          if (propertyBehavior === 'STANDARD')
-            standardPropertiesCount++;
         } else {
           versionProperties.push({
             propertyDefinitionId: definitionId,
             value
           })
+          // 2023-12-06: STANDARD now needs to be set on tip version
+          if (propertyBehavior === 'STANDARD')
+            standardPropertiesCount++;
         }
       }
 
