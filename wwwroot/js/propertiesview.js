@@ -73,6 +73,10 @@ function isComponentLevelProperty(propertyBehavior) {
   return (['TIMELESS'].includes(propertyBehavior));
 }
 
+function isStandardProperty(propertyBehavior) {
+  return (['STANDARD'].includes(propertyBehavior));
+}
+
 function getInputValues(input) {
   // We can ignore radio buttons for "NO" - working through "YES" is enough 
   if (input.id.endsWith("_NO"))
@@ -106,8 +110,8 @@ function setInputValues(input, value) {
     input.value = value;  
 }
 
-function updateView(isComponentLevel) {
-  if (isComponentLevel)
+function updateView(isStandardProperty) {
+  if (isStandardProperty)
     // Since a new version was generated we have to list all the available
     // versions again
     updateVersionsList();
@@ -190,7 +194,7 @@ function addRowToBody(tbody, definition, versionProperties, isEditable) {
   isEditable &&= definition.isArchived === false;
 
   let info = '';
-  const isComponentLevel = isComponentLevelProperty(definition.propertyBehavior);
+  const isStandardProp = isStandardProperty(definition.propertyBehavior);
   const behaviors = {
     'DYNAMIC': 'D',
     'DYNAMIC_AT_VERSION': 'DV',
@@ -235,7 +239,7 @@ function addRowToBody(tbody, definition, versionProperties, isEditable) {
   eraser.classList.toggle("hidden", !isEditable);
   eraser.onclick = async () => {
     let extendableId = isComponentLevel ? _itemId : _versionId;
-    const text = (isComponentLevel) ?
+    const text = (isStandardProp) ?
       'Are you sure you want to save these changes? A new file version will be created with this property cleared. This action can’t be undone.' :
       'Are you sure you want to save these changes? The property for this version will be cleared. This action can’t be undone. '
     showInfoDialog('question', 'Save changes?', text, 'Cancel', 'Save', async () => {
@@ -245,7 +249,7 @@ function addRowToBody(tbody, definition, versionProperties, isEditable) {
         ])
       }); 
 
-      updateView(isComponentLevel);
+      updateView(isStandardProp);
     });
   }
 
@@ -351,13 +355,13 @@ function addPropertiesToTable(table, collection, versionProperties, collectionNa
           });
         }
 
-        updateView(componentProperties.length > 0);
+        updateView(standardPropertiesCount > 0);
       } catch (error) {
         console.log(error);
         showInfoDialog("error", null, error, null, "OK", () => {
           // If the component level request failed we just need to update the current version
           // no need to look for a new version, i.e. updateView/isComponentLevel=false
-          updateView(componentProperties.length > 0 && !componentResults);
+          updateView(standardPropertiesCount > 0 && !componentResults);
         })
       }
     })
