@@ -96,8 +96,12 @@ async function onArchive(event) {
       
       if (row) {
         const archivedSpan = row.querySelector('.definition-archived');
+        const archiveButton = row.querySelector('.bi.bi-archive.clickable')
         if (archivedSpan) {
           archivedSpan.textContent = 'Yes';
+        }
+        if (archiveButton) {
+          archiveButton.remove();
         }
       }
     } catch (error) {
@@ -107,7 +111,7 @@ async function onArchive(event) {
 }
 
 function addRow(definitionsTable, definition) {
-  const showArchive = true;
+  const showArchive = !definition.isArchived;
 
   let row = definitionsTable.insertRow();
   row.definition = definition;
