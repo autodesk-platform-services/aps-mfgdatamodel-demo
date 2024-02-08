@@ -92,15 +92,17 @@ async function onArchive(event) {
         );
       });
 
-      const definitionsTable = document.getElementById("definitionsTable");
-      const numOfRows = definitionsTable.rows.length;
-      if (numOfRows < 2) {
-        const collectionId = definitionsTable.getAttribute("collectionId");
-        const collectionName = definitionsTable.getAttribute("collectionName");
-        showDefinitionsTable(collectionId, collectionName, false, []);
-        return;
-      } else {
-        removeRow(definitionsTable, currentValues);
+      const row = document.querySelector(`tr[definitionid=${currentValues.id}]`);
+      
+      if (row) {
+        const archivedSpan = row.querySelector('.definition-archived');
+        const archiveButton = row.querySelector('.bi.bi-archive.clickable')
+        if (archivedSpan) {
+          archivedSpan.textContent = 'Yes';
+        }
+        if (archiveButton) {
+          archiveButton.remove();
+        }
       }
     } catch (error) {
       showInfoDialog("error", null, error, null, "OK", () => {});
@@ -109,7 +111,7 @@ async function onArchive(event) {
 }
 
 function addRow(definitionsTable, definition) {
-  const showArchive = true;
+  const showArchive = !definition.isArchived;
 
   let row = definitionsTable.insertRow();
   row.definition = definition;
@@ -122,6 +124,7 @@ function addRow(definitionsTable, definition) {
     <td class="definition-description">${definition.description}</td>
     <td class="definition-hidden">${toYesOrNo(definition.isHidden)}</td>
     <td class="definition-readonly">${toYesOrNo(definition.isReadOnly)}</td>
+    <td class="definition-archived">${toYesOrNo(definition.isArchived)}</td>
     <td>
       <span href="" class="bi bi-pencil clickable" title="Edit property definition">&nbsp;</span>
       ${showArchive ? '<span href="" class="bi bi-archive clickable" title="Archive property">&nbsp;</span>' : ''}
