@@ -322,9 +322,16 @@ class App {
 
   async linkCollectionToHub(hubId, collectionId) { 
     let response = await this.sendQuery(
-      `mutation LinkPropertyDefinitionCollectionToHub ($propertyDefinitionCollectionId: ID!, $targetHubId: ID!) {
+      `mutation LinkPropertyDefinitionCollection(
+        $propertyDefinitionCollectionId: ID!, $hubId: ID!
+      ) {
         mfg {
-          linkPropertyDefinitionCollection (input: { propertyDefinitionCollectionId: $propertyDefinitionCollectionId, targetHubId: $targetHubId }) {
+          linkPropertyDefinitionCollection(
+            input: {
+              propertyDefinitionCollectionId: $propertyDefinitionCollectionId,
+              hubId: $hubId
+            }
+          ) {
             hub {
               id
               name
@@ -333,8 +340,8 @@ class App {
         }
       }`,
       {
-        targetHubId: hubId,
-        propertyDefinitionCollectionId: collectionId
+        propertyDefinitionCollectionId: collectionId,
+        hubId: hubId
       }
     )
       
