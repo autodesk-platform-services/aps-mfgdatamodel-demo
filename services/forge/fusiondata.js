@@ -278,9 +278,9 @@ class App {
     let cursor = null;
     do {
       let response = await this.sendQuery(
-        `query GetPropertyDefinitionCollectionsByHubId ($hubId: ID!) {
+        `query GetPropertyDefinitionCollectionsByHub ($hubId: ID!) {
           mfg {
-            propertyDefinitionCollectionsByHubId (hubId: $hubId${cursor ? `, pagination : { cursor: "${cursor}" }` : `${isMinimal ? ', pagination : { limit: 1 }' : ''}` }) {
+            propertyDefinitionCollectionsByHub (hubId: $hubId${cursor ? `, pagination : { cursor: "${cursor}" }` : `${isMinimal ? ', pagination : { limit: 1 }' : ''}` }) {
               pagination {
                 cursor
                 pageSize
@@ -288,20 +288,6 @@ class App {
               results {
                 id
                 name
-                description
-                propertyDefinitions {
-                  results {
-                    id
-                    name
-                    propertyBehavior
-                    isArchived
-                    isReadOnly
-                    specification
-                    units {
-                      name
-                    }
-                  }
-                }
               }
             }
           }
@@ -310,11 +296,11 @@ class App {
           hubId
         }
       )
-      cursor = response?.data?.data?.mfg?.propertyDefinitionCollectionsByHubId?.pagination?.cursor;
+      cursor = response?.data?.data?.mfg?.propertyDefinitionCollectionsByHub?.pagination?.cursor;
       console.log({cursor});
       cursor = null;
 
-      res = res.concat(response.data.data.mfg.propertyDefinitionCollectionsByHubId.results);
+      res = res.concat(response.data.data.mfg.propertyDefinitionCollectionsByHub.results);
     } while (cursor)
 
     return res;
