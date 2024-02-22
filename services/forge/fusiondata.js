@@ -278,9 +278,9 @@ class App {
     let cursor = null;
     do {
       let response = await this.sendQuery(
-        `query GetPropertyDefinitionCollectionsByHubId ($hubId: ID!) {
+        `query GetPropertyDefinitionCollectionsByHub ($hubId: ID!) {
           mfg {
-            propertyDefinitionCollectionsByHubId (hubId: $hubId${cursor ? `, pagination : { cursor: "${cursor}" }` : `${isMinimal ? ', pagination : { limit: 1 }' : ''}` }) {
+            propertyDefinitionCollectionsByHub (hubId: $hubId${cursor ? `, pagination : { cursor: "${cursor}" }` : `${isMinimal ? ', pagination : { limit: 1 }' : ''}` }) {
               pagination {
                 cursor
                 pageSize
@@ -288,20 +288,6 @@ class App {
               results {
                 id
                 name
-                description
-                propertyDefinitions {
-                  results {
-                    id
-                    name
-                    propertyBehavior
-                    isArchived
-                    isReadOnly
-                    specification
-                    units {
-                      name
-                    }
-                  }
-                }
               }
             }
           }
@@ -310,11 +296,11 @@ class App {
           hubId
         }
       )
-      cursor = response?.data?.data?.mfg?.propertyDefinitionCollectionsByHubId?.pagination?.cursor;
+      cursor = response?.data?.data?.mfg?.propertyDefinitionCollectionsByHub?.pagination?.cursor;
       console.log({cursor});
       cursor = null;
 
-      res = res.concat(response.data.data.mfg.propertyDefinitionCollectionsByHubId.results);
+      res = res.concat(response.data.data.mfg.propertyDefinitionCollectionsByHub.results);
     } while (cursor)
 
     return res;
@@ -322,9 +308,16 @@ class App {
 
   async linkCollectionToHub(hubId, collectionId) { 
     let response = await this.sendQuery(
-      `mutation LinkPropertyDefinitionCollectionToHub ($propertyDefinitionCollectionId: ID!, $targetHubId: ID!) {
+      `mutation LinkPropertyDefinitionCollection(
+        $propertyDefinitionCollectionId: ID!, $hubId: ID!
+      ) {
         mfg {
-          linkPropertyDefinitionCollection (input: { propertyDefinitionCollectionId: $propertyDefinitionCollectionId, targetHubId: $targetHubId }) {
+          linkPropertyDefinitionCollection(
+            input: {
+              propertyDefinitionCollectionId: $propertyDefinitionCollectionId,
+              hubId: $hubId
+            }
+          ) {
             hub {
               id
               name
@@ -333,8 +326,8 @@ class App {
         }
       }`,
       {
-        targetHubId: hubId,
-        propertyDefinitionCollectionId: collectionId
+        propertyDefinitionCollectionId: collectionId,
+        hubId: hubId
       }
     )
       
