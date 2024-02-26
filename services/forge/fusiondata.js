@@ -336,13 +336,16 @@ class App {
 
   async unlinkCollectionFromHub(hubId, collectionId) { 
     let response = await this.sendQuery(
-      `mutation UnlinkPropertyDefinitionCollectionToHub ($propertyDefinitionCollectionId: ID!, $targetHubId: ID!) {
+      `mutation UnlinkPropertyDefinitionCollection($propertyDefinitionCollectionId: ID!, $targetHubId: ID!) {
         mfg {
-          unlinkPropertyDefinitionCollection (input: { propertyDefinitionCollectionId: $propertyDefinitionCollectionId, targetHubId: $targetHubId }) {
+          unlinkPropertyDefinitionCollection(
+            input: {propertyDefinitionCollectionId: $propertyDefinitionCollectionId, hubId: $targetHubId}
+          ) {
+            propertyDefinitionCollectionId
             hub {
               id
               name
-            }
+            } 
           }
         }
       }`,
