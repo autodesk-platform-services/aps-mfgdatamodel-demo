@@ -618,7 +618,7 @@ class App {
             physicalProperties {
               mass {
                 value
-                propertyDefinition {
+                definition {
                   units {
                     name
                   }
@@ -626,7 +626,7 @@ class App {
               }
               volume {
                 value
-                propertyDefinition {
+                definition {
                   units {
                     name
                   }
@@ -634,7 +634,7 @@ class App {
               }
               density {
                 value
-                propertyDefinition {
+                definition {
                   units {
                     name
                   }
@@ -642,7 +642,7 @@ class App {
               }
               area {
                 value
-                propertyDefinition {
+                definition {
                   units {
                     name
                   }
@@ -651,7 +651,7 @@ class App {
               boundingBox {
                 length {
                   value
-                  propertyDefinition {
+                  definition {
                     units {
                       name
                     }
@@ -659,7 +659,7 @@ class App {
                 }
                 width {
                   value
-                  propertyDefinition {
+                  definition {
                     units {
                       name
                     }
@@ -667,7 +667,7 @@ class App {
                 }
                 height {
                   value
-                  propertyDefinition {
+                  definition {
                     units {
                       name
                     }
@@ -723,7 +723,7 @@ class App {
             customProperties {
               results {
                 value
-                propertyDefinition {
+                definition {
                   id
                   name
                   specification
@@ -756,7 +756,7 @@ class App {
             customProperties {
               results {
                 value
-                propertyDefinition {
+                definition {
                   id
                   name
                   specification
