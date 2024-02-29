@@ -34,7 +34,7 @@ class App {
       response = err.response;
     }
 
-    if (response.data.errors && !query.includes('GetPropertyDefinitionCollectionsByHubId')) {
+    if (response.data.errors && !query.includes('GetPropertyDefinitionCollectionsByHub')) {
       let formatted = JSON.stringify(response.data.errors, null, 2);
       console.log(`API error:\n${formatted}`);
 
@@ -288,6 +288,19 @@ class App {
               results {
                 id
                 name
+                definitions {
+                  results {
+                    id
+                    name
+                    propertyBehavior
+                    isArchived
+                    isReadOnly
+                    specification
+                    units {
+                      name
+                    }
+                  }
+                }
               }
             }
           }

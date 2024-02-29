@@ -209,7 +209,7 @@ function addRowToBody(tbody, definition, versionProperties, isEditable) {
     info = `<span class="bi bi-info-circle" title="Property value is only applied to this component version" />`
     */
 
-  const property = versionProperties.find(item => item.propertyDefinition.id === definition.id);
+  const property = versionProperties.find(item => item.definition.id === definition.id);
   const value = (property) ? property.value : '';
 
   let inputHTML = "";
@@ -287,8 +287,7 @@ function addPropertiesToTable(table, collection, versionProperties, collectionNa
       <th>Action</th>
     </tr>`
   const tbody = document.createElement("tbody");
-
-  const definitions = collection.propertyDefinitions?.results;//.filter(item => isComponentLevel === isComponentLevelProperty(item.propertyBehavior))
+  const definitions = collection.definitions?.results;//.filter(item => isComponentLevel === isComponentLevelProperty(item.propertyBehavior))
   if (!definitions || definitions.length < 1)
     return;
 
@@ -550,9 +549,13 @@ async function showVersionProperties() {
       const table = document.createElement("table"); 
       table.classList = "table";
       for (let collection of hubCollections.value) {
-        // '!!' turns the find result into boolean
-        const isMyCollection = !!myCollections.value.find(item => item.id === collection.id);
-        addPropertiesToTable(table, collection, versionProperties.value, collection.name, isMyCollection)
+        if (collection !== null) {
+          const isMyCollection = !!myCollections.value.find(item => {
+            
+            item.id === collection?.id
+          });
+          addPropertiesToTable(table, collection, versionProperties.value, collection.name, isMyCollection)
+        }
       }
       propertiesPane.appendChild(table);
     }
