@@ -26,6 +26,9 @@ export async function showHubCollectionsDialog(hubId) {
     ]);
   });
 
+  collections.value = collections.value.filter(e => e);
+  linkedCollections.value = linkedCollections.value.filter(e => e);
+
   // If getting lkinked collections failed 
   // then you don't have anything linked yet 
 
