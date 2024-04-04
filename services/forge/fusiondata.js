@@ -429,27 +429,31 @@ class App {
       let response = await this.sendQuery(
         `query GetPropertyDefinitions($propertyDefinitionCollectionId: ID!) {
           mfg {
-            propertyDefinitions(
-              propertyDefinitionCollectionId: $propertyDefinitionCollectionId
-            ) {
-              pagination {
-                cursor
-                pageSize
-              }
-              results {
-                id
-                name
-                specification
-                units {
-                  id
-                  name
+            application {
+              propertyDefinitionCollections(filter: {id: [$propertyDefinitionCollectionId]}) {
+                results {
+                  definitions ${cursor ? `(pagination : { cursor: "${cursor}" })` : "" } {
+                    pagination {
+                      cursor
+                      pageSize
+                    }
+                    results {
+                      id
+                      name
+                      specification
+                      units {
+                        id
+                        name
+                      }
+                      isArchived
+                      isHidden
+                      shouldCopy
+                      isReadOnly
+                      description
+                      propertyBehavior
+                    }
+                  }
                 }
-                isArchived
-                isHidden
-                shouldCopy
-                isReadOnly
-                description
-                propertyBehavior
               }
             }
           }
@@ -458,11 +462,11 @@ class App {
           propertyDefinitionCollectionId: collectionId
         }
       )
-      cursor = response?.data?.data?.mfg?.propertyDefinitions?.pagination?.cursor;
+      cursor = response?.data?.data?.mfg?.application?.propertyDefinitionCollections?.results[0]?.definitions?.pagination?.cursor;
       console.log({cursor});
       cursor = null;
 
-      res = res.concat(response.data.data.mfg.propertyDefinitions.results);
+      res = res.concat(response.data.data.mfg.application.propertyDefinitionCollections.results[0].definitions.results);
     } while (cursor)
 
     return res;
