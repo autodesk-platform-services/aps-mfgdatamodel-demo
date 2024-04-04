@@ -16,8 +16,6 @@ from https://tutorials.autodesk.io.
 ### Prerequisites
 
 - [APS application](https://aps.autodesk.com/en/docs/oauth/v2/tutorials/create-app)
-- Provisioned access to [BIM 360 Docs](https://aps.autodesk.com/en/docs/bim360/v1/tutorials/getting-started/manage-access-to-docs/)
-or Autodesk Construction Cloud
 - [Node.js](https://nodejs.org) (we recommend the Long Term Support version)
 - Terminal (for example, [Windows Command Prompt](https://en.wikipedia.org/wiki/Cmd.exe)
 or [macOS Terminal](https://support.apple.com/guide/terminal/welcome/mac))
