@@ -247,15 +247,17 @@ class App {
       let response = await this.sendQuery(
         `query GetPropertyDefinitionCollections {
           mfg {
-            propertyDefinitionCollections ${cursor ? `(pagination : { cursor: "${cursor}" })` : "" } {
-              pagination {
-                cursor
-                pageSize
-              }
-              results {
-                id
-                name
-                description
+            application {
+              propertyDefinitionCollections ${cursor ? `(pagination : { cursor: "${cursor}" })` : "" } {
+                pagination {
+                  cursor
+                  pageSize
+                }
+                results {
+                  id
+                  name
+                  description
+                }
               }
             }
           }
@@ -263,11 +265,11 @@ class App {
         {
         }
       )
-      cursor = response?.data?.data?.mfg?.propertyDefinitionCollections?.pagination?.cursor;
+      cursor = response?.data?.data?.mfg?.application?.propertyDefinitionCollections?.pagination?.cursor;
       console.log({cursor});
       cursor = null;
 
-      res = res.concat(response.data.data.mfg.propertyDefinitionCollections.results);
+      res = res.concat(response.data.data.mfg.application?.propertyDefinitionCollections.results);
     } while (cursor)
 
     return res;
@@ -279,25 +281,29 @@ class App {
     do {
       let response = await this.sendQuery(
         `query GetPropertyDefinitionCollectionsByHub ($hubId: ID!) {
-          mfg {
-            propertyDefinitionCollectionsByHub (hubId: $hubId${cursor ? `, pagination : { cursor: "${cursor}" }` : `${isMinimal ? ', pagination : { limit: 1 }' : ''}` }) {
-              pagination {
-                cursor
-                pageSize
-              }
-              results {
-                id
-                name
-                definitions {
+          nav {
+            hub(hubId: $hubId) {
+              ... on MFGHub {
+                propertyDefinitionCollections ${cursor ? `(pagination : { cursor: "${cursor})" }` : `${isMinimal ? '(pagination : { limit: 1 })' : ''}`} {
+                  pagination {
+                    cursor
+                    pageSize
+                  }
                   results {
                     id
                     name
-                    propertyBehavior
-                    isArchived
-                    isReadOnly
-                    specification
-                    units {
-                      name
+                    definitions {
+                      results {
+                        id
+                        name
+                        propertyBehavior
+                        isArchived
+                        isReadOnly
+                        specification
+                        units {
+                          name
+                        }
+                      }
                     }
                   }
                 }
@@ -309,11 +315,11 @@ class App {
           hubId
         }
       )
-      cursor = response?.data?.data?.mfg?.propertyDefinitionCollectionsByHub?.pagination?.cursor;
+      cursor = response?.data?.data?.nav?.hub?.propertyDefinitionCollections?.pagination?.cursor;
       console.log({cursor});
       cursor = null;
 
-      res = res.concat(response.data.data.mfg.propertyDefinitionCollectionsByHub.results);
+      res = res.concat(response.data.data.nav.hub.propertyDefinitionCollections.results);
     } while (cursor)
 
     return res;
@@ -427,27 +433,31 @@ class App {
       let response = await this.sendQuery(
         `query GetPropertyDefinitions($propertyDefinitionCollectionId: ID!) {
           mfg {
-            propertyDefinitions(
-              propertyDefinitionCollectionId: $propertyDefinitionCollectionId
-            ) {
-              pagination {
-                cursor
-                pageSize
-              }
-              results {
-                id
-                name
-                specification
-                units {
-                  id
-                  name
+            application {
+              propertyDefinitionCollections(filter: {id: [$propertyDefinitionCollectionId]}) {
+                results {
+                  definitions ${cursor ? `(pagination : { cursor: "${cursor}" })` : "" } {
+                    pagination {
+                      cursor
+                      pageSize
+                    }
+                    results {
+                      id
+                      name
+                      specification
+                      units {
+                        id
+                        name
+                      }
+                      isArchived
+                      isHidden
+                      shouldCopy
+                      isReadOnly
+                      description
+                      propertyBehavior
+                    }
+                  }
                 }
-                isArchived
-                isHidden
-                shouldCopy
-                isReadOnly
-                description
-                propertyBehavior
               }
             }
           }
@@ -456,11 +466,11 @@ class App {
           propertyDefinitionCollectionId: collectionId
         }
       )
-      cursor = response?.data?.data?.mfg?.propertyDefinitions?.pagination?.cursor;
+      cursor = response?.data?.data?.mfg?.application?.propertyDefinitionCollections?.results[0]?.definitions?.pagination?.cursor;
       console.log({cursor});
       cursor = null;
 
-      res = res.concat(response.data.data.mfg.propertyDefinitions.results);
+      res = res.concat(response.data.data.mfg.application.propertyDefinitionCollections.results[0].definitions.results);
     } while (cursor)
 
     return res;
