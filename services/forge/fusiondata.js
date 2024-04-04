@@ -281,25 +281,29 @@ class App {
     do {
       let response = await this.sendQuery(
         `query GetPropertyDefinitionCollectionsByHub ($hubId: ID!) {
-          mfg {
-            propertyDefinitionCollectionsByHub (hubId: $hubId${cursor ? `, pagination : { cursor: "${cursor}" }` : `${isMinimal ? ', pagination : { limit: 1 }' : ''}` }) {
-              pagination {
-                cursor
-                pageSize
-              }
-              results {
-                id
-                name
-                definitions {
+          nav {
+            hub(hubId: $hubId) {
+              ... on MFGHub {
+                propertyDefinitionCollections ${cursor ? `(pagination : { cursor: "${cursor})" }` : `${isMinimal ? '(pagination : { limit: 1 })' : ''}`} {
+                  pagination {
+                    cursor
+                    pageSize
+                  }
                   results {
                     id
                     name
-                    propertyBehavior
-                    isArchived
-                    isReadOnly
-                    specification
-                    units {
-                      name
+                    definitions {
+                      results {
+                        id
+                        name
+                        propertyBehavior
+                        isArchived
+                        isReadOnly
+                        specification
+                        units {
+                          name
+                        }
+                      }
                     }
                   }
                 }
@@ -311,11 +315,11 @@ class App {
           hubId
         }
       )
-      cursor = response?.data?.data?.mfg?.propertyDefinitionCollectionsByHub?.pagination?.cursor;
+      cursor = response?.data?.data?.nav?.hub?.propertyDefinitionCollections?.pagination?.cursor;
       console.log({cursor});
       cursor = null;
 
-      res = res.concat(response.data.data.mfg.propertyDefinitionCollectionsByHub.results);
+      res = res.concat(response.data.data.nav.hub.propertyDefinitionCollections.results);
     } while (cursor)
 
     return res;
