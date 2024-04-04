@@ -17,9 +17,9 @@
               "<node_internals>/**/*.js"
           ],
           "env": {
-            "FORGE_CLIENT_ID": "",
-            "FORGE_CLIENT_SECRET": "",
-            "FORGE_CALLBACK_URL": "http://localhost:3000/api/auth/callback",
+            "APS_CLIENT_ID": "",
+            "APS_CLIENT_SECRET": "",
+            "APS_CALLBACK_URL": "http://localhost:3000/api/auth/callback",
             "SERVER_SESSION_SECRET": "mysecret",
             "BASE_URL": "https://developer.api.autodesk.com"
           }
@@ -37,9 +37,11 @@
               "<node_internals>/**/*.js"
           ],
           "env": {
-            "FORGE_CLIENT_ID": "",
-            "FORGE_CLIENT_SECRET": "",
-            "FORGE_CALLBACK_URL": "http://localhost:3000/api/auth/callback",
+			"ACCOUNTS_URL": "https://accounts-staging.autodesk.com",
+            "APS_URL": "https://aps-stg.autodesk.com",
+			"GRAPHQL_URL": "https://developer-stg.api.autodesk.com/private/graphql",
+            "APS_CLIENT_SECRET": "",
+            "APS_CALLBACK_URL": "http://localhost:3000/api/auth/callback",
             "SERVER_SESSION_SECRET": "mysecret",
             "BASE_URL": "https://developer-stg.api.autodesk.com"
           }
@@ -57,9 +59,9 @@
               "<node_internals>/**/*.js"
           ],
           "env": {
-            "FORGE_CLIENT_ID": "",
-            "FORGE_CLIENT_SECRET": "",
-            "FORGE_CALLBACK_URL": "http://localhost:3000/api/auth/callback",
+            "APS_CLIENT_ID": "",
+            "APS_CLIENT_SECRET": "",
+            "APS_CALLBACK_URL": "http://localhost:3000/api/auth/callback",
             "SERVER_SESSION_SECRET": "mysecret",
             "BASE_URL": "https://developer-stg.api.autodesk.com"
           }
