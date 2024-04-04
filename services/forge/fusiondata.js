@@ -247,15 +247,17 @@ class App {
       let response = await this.sendQuery(
         `query GetPropertyDefinitionCollections {
           mfg {
-            propertyDefinitionCollections ${cursor ? `(pagination : { cursor: "${cursor}" })` : "" } {
-              pagination {
-                cursor
-                pageSize
-              }
-              results {
-                id
-                name
-                description
+            application {
+              propertyDefinitionCollections ${cursor ? `(pagination : { cursor: "${cursor}" })` : "" } {
+                pagination {
+                  cursor
+                  pageSize
+                }
+                results {
+                  id
+                  name
+                  description
+                }
               }
             }
           }
@@ -263,11 +265,11 @@ class App {
         {
         }
       )
-      cursor = response?.data?.data?.mfg?.propertyDefinitionCollections?.pagination?.cursor;
+      cursor = response?.data?.data?.mfg?.application?.propertyDefinitionCollections?.pagination?.cursor;
       console.log({cursor});
       cursor = null;
 
-      res = res.concat(response.data.data.mfg.propertyDefinitionCollections.results);
+      res = res.concat(response.data.data.mfg.application?.propertyDefinitionCollections.results);
     } while (cursor)
 
     return res;
