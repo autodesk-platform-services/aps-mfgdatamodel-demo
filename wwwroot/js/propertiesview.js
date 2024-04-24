@@ -550,10 +550,7 @@ async function showVersionProperties() {
       table.classList = "table";
       for (let collection of hubCollections.value) {
         if (collection !== null) {
-          const isMyCollection = !!myCollections.value.find(item => {
-            
-            item.id === collection?.id
-          });
+          const isMyCollection = !!myCollections.value.find(item => item.id === collection.id);
           addPropertiesToTable(table, collection, versionProperties.value, collection.name, isMyCollection)
         }
       }
