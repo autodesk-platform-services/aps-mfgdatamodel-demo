@@ -306,7 +306,7 @@ export function initTreeControl(
 
     const hubNodes = document.getElementsByClassName("title icon icon-hub");
 
-    if (hubNodes.length > 1) {
+    if (hubNodes.length > 0) {
       for (let item of hubNodes) {
         addLinkButton(item, onHubButtonClicked);
       }
