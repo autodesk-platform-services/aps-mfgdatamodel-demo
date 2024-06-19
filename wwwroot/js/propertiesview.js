@@ -47,10 +47,7 @@ async function showThumbnail() {
       if (!['PENDING', 'IN_PROGRESS'].includes(response.status)) {
         if (response.status !== 'SUCCESS')
           throw "Could not generate thumbnail";
-  
-        // still needed for drawings 
-        thumbnail.src = `/api/fusiondata/thumbnail/${encodeURIComponent(response.url)}`;
-        //thumbnail.src = response.url;
+        thumbnail.src = response.signedUrl;
 
         break;
       }
