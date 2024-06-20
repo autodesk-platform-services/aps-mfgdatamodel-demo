@@ -56,6 +56,21 @@ class App {
     return message;
   }
 
+  async getCWProjectId(projectId) {
+    let response = await this.sendQuery(
+      `query GetPropertyDefinitionCollectionsByHub ($projectId: ID!) {
+        projectByDataManagementAPIId(dataManagementAPIProjectId: $projectId) {
+          id
+        }
+      }`,
+      {
+        projectId: projectId
+      }
+    )
+
+    return response.data.data.projectByDataManagementAPIId.id;
+  }
+
   async getComponentVersionThumbnailUrl(componentVersionId) {  
     let response = await this.sendQuery(
       `query GetThumbnail($componentVersionId: ID!) {
@@ -113,24 +128,22 @@ class App {
   async getThumbnail(projectId, fileVersionId) {  
     let response = await this.sendQuery(
       `query GetThumbnail($projectId: ID!, $fileVersionId: ID!) {
-        nav {
-          itemVersion(projectId: $projectId, versionId: $fileVersionId) {
-            ... on DesignItemVersion {
-              rootComponentVersion {
-                id
-                thumbnail {
-                  status
-                  signedUrl
-                }
+        itemVersion(projectId: $projectId, versionId: $fileVersionId) {
+          ... on DesignItemVersion {
+            rootComponentVersion {
+              id
+              thumbnail {
+                status
+                signedUrl
               }
             }
-            ... on DrawingItemVersion {
-              drawingVersion {
-                id
-                thumbnail {
-                  status
-                  signedUrl
-                }
+          }
+          ... on DrawingItemVersion {
+            drawingVersion {
+              id
+              thumbnail {
+                status
+                signedUrl
               }
             }
           }
@@ -142,7 +155,7 @@ class App {
       }
     )
 
-    let itemVersion = response.data.data.nav.itemVersion;
+    let itemVersion = response.data.data.itemVersion;
     let thumbnail = itemVersion.rootComponentVersion ? itemVersion.rootComponentVersion.thumbnail : itemVersion.drawingVersion.thumbnail;
 
     let resp = await axios({
@@ -157,31 +170,31 @@ class App {
   }
 
   async getVersionId(projectId, fileVersionId) {  
+    projectId = await this.getCWProjectId(projectId);
+
     let response = await this.sendQuery(
       `query GetVersionId($projectId: ID!, $fileVersionId: ID!) {
-        nav {
-          itemVersion(projectId: $projectId, versionId: $fileVersionId) {
-            ... on DesignItemVersion {
-              rootComponentVersion {
+        itemVersion(projectId: $projectId, versionId: $fileVersionId) {
+          ... on DesignItemVersion {
+            rootComponentVersion {
+              id
+              lastModifiedOn
+              component {
                 id
-                lastModifiedOn
-                component {
+                tipVersion {
                   id
-                  tipVersion {
-                    id
-                  }
                 }
               }
             }
-            ... on DrawingItemVersion {
-              drawingVersion {
+          }
+          ... on DrawingItemVersion {
+            drawingVersion {
+              id
+              lastModifiedOn
+              drawing {
                 id
-                lastModifiedOn
-                drawing {
+                tipVersion {
                   id
-                  tipVersion {
-                    id
-                  }
                 }
               }
             }
@@ -194,7 +207,7 @@ class App {
       }
     )
 
-    const itemVersion = response.data.data.nav.itemVersion;
+    const itemVersion = response.data.data.itemVersion;
     const versionId = itemVersion.rootComponentVersion ? itemVersion.rootComponentVersion.id : itemVersion.drawingVersion.id;
     const tipVersionId = itemVersion.rootComponentVersion ? itemVersion.rootComponentVersion.component.tipVersion.id : itemVersion.drawingVersion.drawing.tipVersion.id;
     const itemId = itemVersion.rootComponentVersion ? itemVersion.rootComponentVersion.component.id : itemVersion.drawingVersion.drawing.id;
@@ -205,19 +218,19 @@ class App {
   }
 
   async getItemId(projectId, fileItemId) {  
+    projectId = await this.getCWProjectId(projectId);
+
     let response = await this.sendQuery(
       `query GetItemId($projectId: ID!, $fileItemId: ID!) {
-        nav {
-          item(projectId: $projectId, itemId: $fileItemId) {
-            ... on DesignItem {
-              rootComponent {
-                id
-              }
+        item(projectId: $projectId, itemId: $fileItemId) {
+          ... on DesignItem {
+            rootComponent {
+              id
             }
-            ... on DrawingItem {
-              drawing {
-                id
-              }
+          }
+          ... on DrawingItem {
+            drawing {
+              id
             }
           }
         }
@@ -228,7 +241,7 @@ class App {
       }
     )
 
-    const item = response.data.data.nav.item;
+    const item = response.data.data.item;
     const id = item.rootComponent ? item.rootComponent.id : item.drawing.id;
     const type = item.rootComponent ? 'component' : 'drawing';
 
@@ -272,27 +285,25 @@ class App {
     do {
       let response = await this.sendQuery(
         `query GetPropertyDefinitionCollectionsByHub ($hubId: ID!) {
-          nav {
-            hub(hubId: $hubId) {
-              propertyDefinitionCollections ${cursor ? `(pagination : { cursor: "${cursor})" }` : `${isMinimal ? '(pagination : { limit: 1 })' : ''}`} {
-                pagination {
-                  cursor
-                  pageSize
-                }
-                results {
-                  id
-                  name
-                  definitions {
-                    results {
-                      id
+          hubByDataManagementAPIId(dataManagementAPIHubId: $hubId) {
+            propertyDefinitionCollections ${cursor ? `(pagination : { cursor: "${cursor})" }` : `${isMinimal ? '(pagination : { limit: 1 })' : ''}`} {
+              pagination {
+                cursor
+                pageSize
+              }
+              results {
+                id
+                name
+                definitions {
+                  results {
+                    id
+                    name
+                    propertyBehavior
+                    isArchived
+                    isReadOnly
+                    specification
+                    units {
                       name
-                      propertyBehavior
-                      isArchived
-                      isReadOnly
-                      specification
-                      units {
-                        name
-                      }
                     }
                   }
                 }
@@ -304,11 +315,11 @@ class App {
           hubId
         }
       )
-      cursor = response?.data?.data?.nav?.hub?.propertyDefinitionCollections?.pagination?.cursor;
+      cursor = response?.data?.data?.hubByDataManagementAPIId?.propertyDefinitionCollections?.pagination?.cursor;
       console.log({cursor});
       cursor = null;
 
-      res = res.concat(response.data.data.nav.hub.propertyDefinitionCollections.results);
+      res = res.concat(response.data.data.hubByDataManagementAPIId.propertyDefinitionCollections.results);
     } while (cursor)
 
     return res;
@@ -497,22 +508,20 @@ class App {
   async getDefinition(definitionId) { 
     let response = await this.sendQuery(
       `query GetPropertyDefinition($propertyDefinitionId: ID!) {
-        mfg {
-          propertyDefinition(propertyDefinitionId: $propertyDefinitionId) {
+        propertyDefinition(propertyDefinitionId: $propertyDefinitionId) {
+          id
+          name
+          specification
+          units {
             id
             name
-            specification
-            units {
-              id
-              name
-            }
-            isArchived
-            isHidden
-            shouldCopy
-            isReadOnly
-            description
-            propertyBehavior
           }
+          isArchived
+          isHidden
+          shouldCopy
+          isReadOnly
+          description
+          propertyBehavior
         }
       }`,
       {
@@ -520,7 +529,7 @@ class App {
       }
     );
     
-    return response.data.data.mfg.propertyDefinition;
+    return response.data.data.propertyDefinition;
   }
 
   async updateDefinition(definitionId, description, isHidden) { 
@@ -837,7 +846,7 @@ class App {
 
       result = result.concat(response.data.data.componentVersion.occurrences.results);
 
-      cursor = response.data.data.mfg.componentVersion.occurrences.pagination.cursor;
+      cursor = response.data.data.componentVersion.occurrences.pagination.cursor;
       if (!cursor)
         break;
     }
@@ -881,7 +890,7 @@ class App {
 
       result = result.concat(response.data.data.componentVersion.allOccurrences.results);
 
-      cursor = response.data.data.mfg.componentVersion.allOccurrences.pagination.cursor;
+      cursor = response.data.data.componentVersion.allOccurrences.pagination.cursor;
       if (!cursor)
         break;
     }
