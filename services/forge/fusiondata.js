@@ -56,9 +56,24 @@ class App {
     return message;
   }
 
+  async getCWHubId(hubId) {
+    let response = await this.sendQuery(
+      `query GetCWHubId ($hubId: ID!) {
+        hubByDataManagementAPIId(dataManagementAPIHubId: $hubId) {
+          id
+        }
+      }`,
+      {
+        hubId: hubId
+      }
+    )
+
+    return response.data.data.hubByDataManagementAPIId.id;
+  }
+
   async getCWProjectId(projectId) {
     let response = await this.sendQuery(
-      `query GetPropertyDefinitionCollectionsByHub ($projectId: ID!) {
+      `query GetCWProjectId ($projectId: ID!) {
         projectByDataManagementAPIId(dataManagementAPIProjectId: $projectId) {
           id
         }
@@ -326,6 +341,7 @@ class App {
   }
 
   async linkCollectionToHub(hubId, collectionId) { 
+    hubId = await this.getCWHubId(hubId);
     let response = await this.sendQuery(
       `mutation LinkPropertyDefinitionCollection(
         $propertyDefinitionCollectionId: ID!, $hubId: ID!
@@ -352,6 +368,7 @@ class App {
   }
 
   async unlinkCollectionFromHub(hubId, collectionId) { 
+    hubId = await this.getCWHubId(hubId);
     let response = await this.sendQuery(
       `mutation UnlinkPropertyDefinitionCollection($propertyDefinitionCollectionId: ID!, $targetHubId: ID!) {
         unlinkPropertyDefinitionCollection(input: {propertyDefinitionCollectionId: $propertyDefinitionCollectionId, hubId: $targetHubId}) {
