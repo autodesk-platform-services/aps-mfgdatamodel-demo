@@ -793,7 +793,7 @@ class App {
     return response.data.data.drawingVersion.customProperties.results;
   }
 
-  async setProperties(extendableId, properties) {  
+  async setProperties(targetId, properties) {  
     let response = await this.sendQuery(
       `mutation SetProperties($input: SetPropertiesInput!) {
         setProperties(input: $input) {
@@ -802,7 +802,7 @@ class App {
       }`,
       {
         input: {
-          extendableId,
+          targetId,
           propertyInputs: properties
         }
       }
@@ -812,20 +812,25 @@ class App {
   }
 
   // TODO: Need to re-write this mutation since it is deprecated. Now we need to use setProperties mutation with shouldClear input set to true
-  async deleteProperty(extendableId, propertyDefinitionId) {  
+  async deleteProperty(targetId, propertyDefinitionId) {  
     let response = await this.sendQuery(
-      `mutation DeleteProperty($extendableId: ID!, $propertyDefinitionId: ID!) {
-        clearProperties(input: {extendableId: $extendableId, propertyDefinitionIds: [$propertyDefinitionId]}) {
-          extendableId
+      `mutation DeleteProperty($input: SetPropertiesInput!) {
+        setProperties(input: $input) {
+          targetId
         }
       }`,
       {
-        extendableId,
-        propertyDefinitionId
+        input: {
+			    targetId,
+          propertyInputs: [{
+            propertyDefinitionId,
+            shouldClear: true
+          }]
+        }
       }
     )
 
-    return response.data.data.deleteProperty;
+    return response.data.data.setProperties;
   }
 
   async getModelOccurrences(componentVersionId) {
