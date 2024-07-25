@@ -235,7 +235,9 @@ function addRowToBody(tbody, definition, versionProperties, isEditable) {
   const eraser = row.querySelector(".bi-eraser.clickable");
   eraser.classList.toggle("hidden", !isEditable);
   eraser.onclick = async () => {
-    let extendableId = isComponentLevel ? _itemId : _versionId;
+    //let extendableId = isComponentLevel ? _itemId : _versionId;
+    // You always have to set things on version
+    let extendableId = _versionId;
     const text = (isStandardProp) ?
       'Are you sure you want to save these changes? A new file version will be created with this property cleared. This action can’t be undone.' :
       'Are you sure you want to save these changes? The property for this version will be cleared. This action can’t be undone. '
