@@ -61,6 +61,9 @@ export async function getJSON(url, verb = "GET", body) {
       throw err;
     }
     return resp.json();
+  } catch (err) {
+    console.log("getJSON -> catch")
+    throw err;
   } finally {
     _controllers.delete(controller);
   }

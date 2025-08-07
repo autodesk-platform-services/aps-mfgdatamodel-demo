@@ -72,11 +72,13 @@ async function authRefreshMiddleware(req, res, next) {
     }
 
     // Only admins (people who know the client secret) can access these endpoints
+    /*
     if (req.url.startsWith("/collections") || req.url.startsWith("/definitions")) {
       // these only require 2-legged authentication
       next();
       return;
     }
+      */
 
     // The rest is about checking for 3-legged token and refresh token
 

@@ -38,13 +38,15 @@ class App {
       let formatted = JSON.stringify(response.data.errors, null, 2);
       console.log(`API error:\n${formatted}`);
 
-      throw this.getErrorMessage(response.data.errors);
+      throw this.getError(response.data.errors);
+    } else if (response.status !== 200) {
+      throw response;
     }
     
     return response;
   }
 
-  getErrorMessage(errors) {
+  getError(errors) {
     const error = errors[0]
     let message = error.message.split("message=")[1]
 
